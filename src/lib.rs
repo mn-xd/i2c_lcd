@@ -325,6 +325,7 @@ where
         for c in s.chars() {
             if c == '\n' {
                 self.set_cursor_position(0, row + 1)?;
+                println!("row in bow: {}", row);
             } else {
                 self.write(c as u8)?;
             }
