@@ -323,7 +323,7 @@ where
     pub fn print(&mut self, s: &str) -> Result<(), <I as i2c::Write>::Error> {
         let row = 0;
         for c in s.chars() {
-            if c.to_string() == "\n" {
+            if c == '\n' {
                 self.set_cursor_position(0, row + 1)?;
             } else {
                 self.write(c as u8)?;
