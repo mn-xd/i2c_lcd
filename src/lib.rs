@@ -324,13 +324,11 @@ where
         let mut row = 0;
         for c in s.chars() {
             if c == '\n' {
-                row = row + 1;
+                row = (row + 1).clamp(0, 3);
                 self.set_cursor_position(0, row)?;
-                println!("row in bow: {}", row);
             } else {
                 self.write(c as u8)?;
             }
-            println!("{}", row);
         }
 
         Ok(())
