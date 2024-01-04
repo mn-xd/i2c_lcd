@@ -324,7 +324,7 @@ where
         let row = 0;
         for c in s.chars() {
             if c.to_string() == "\n" {
-                self.set_cursor_position(0, (row + 1).clamp(0, 3))?;
+                self.set_cursor_position(0, row + 1)?;
             } else {
                 self.write(c as u8)?;
             }
