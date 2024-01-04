@@ -328,6 +328,7 @@ where
             } else {
                 self.write(c as u8)?;
             }
+            println!("{}", row);
         }
 
         Ok(())
