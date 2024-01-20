@@ -156,7 +156,7 @@ impl DisplayControl {
     }
 }
 
-pub struct Lcd<'a, 'b, I, D>
+pub struct Lcd<'a, I, D>
 where
     I: i2c::Write,
     D: DelayMs<u8>,
@@ -164,10 +164,10 @@ where
     i2c: &'a mut I,
     control: DisplayControl,
     address: u8,
-    delay: &'b mut D,
+    delay: &'a mut D,
 }
 
-impl<'a, 'b, I, D> Lcd<'a, 'b, I, D>
+impl<'a, I, D> Lcd<'a, I, D>
 where
     I: i2c::Write,
     D: DelayMs<u8>,
@@ -175,7 +175,7 @@ where
     pub fn new(
         i2c: &'a mut I,
         address: u8,
-        delay: &'b mut D,
+        delay: &'a mut D,
     ) -> Result<Self, <I as i2c::Write>::Error> {
         let mut display = Self {
             i2c,
