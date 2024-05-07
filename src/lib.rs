@@ -26,7 +26,7 @@
 
 use std::usize;
 
-use embedded_hal::{delay::DelayNs, i2c::I2c};
+use embedded_hal::{delay::DelayUs, i2c::I2c};
 
 /// Controls the visibilty of the non-blinking cursor, which is basically an _ **after** the cursor position.
 /// The cursor position represents where the next character will show up.
@@ -165,7 +165,7 @@ pub struct Lcd<'a, I2C, D> {
     row_offsets: [u8; 4],
 }
 
-impl<'a, I2C: I2c, D: DelayNs> Lcd<'a, I2C, D> {
+impl<'a, I2C: I2c, D: DelayUs> Lcd<'a, I2C, D> {
     pub fn new(
         i2c: &'a mut I2C,
         address: u8,
@@ -261,7 +261,7 @@ impl<'a, I2C: I2c, D: DelayNs> Lcd<'a, I2C, D> {
     */
     pub fn set_cursor_position(&mut self, col: u8, mut row: u8) -> Result<(), I2C::Error> {
         let max_rows = self.row_offsets.len() as u8;
-        // Code based of LiquidCrystal arudino library
+        // // Code based of LiquidCrystal arudino library
         if row >= max_rows {
             row = max_rows - 1;
         }
@@ -327,7 +327,7 @@ impl<'a, I2C: I2c, D: DelayNs> Lcd<'a, I2C, D> {
         let mut row = 0;
         for c in s.chars() {
             if c == '\n' {
-                row = (row + 1).clamp(0, self.rows);
+                row = (row + 1).clamp(1, self.rows);
                 self.set_cursor_position(0, row)?;
             } else {
                 self.write(c as u8)?;
