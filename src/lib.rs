@@ -26,7 +26,7 @@
 
 use std::usize;
 
-use embedded_hal::{delay::DelayNs, i2c::I2c};
+use embedded_hal::{delay::DelayUs, i2c::I2c};
 
 /// Controls the visibilty of the non-blinking cursor, which is basically an _ **after** the cursor position.
 /// The cursor position represents where the next character will show up.
@@ -165,7 +165,7 @@ pub struct Lcd<'a, I2C, D> {
     row_offsets: [u8; 4],
 }
 
-impl<'a, I2C: I2c, D: DelayNs> Lcd<'a, I2C, D> {
+impl<'a, I2C: I2c, D: DelayUs> Lcd<'a, I2C, D> {
     pub fn new(
         i2c: &'a mut I2C,
         address: u8,
