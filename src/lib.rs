@@ -279,7 +279,7 @@ impl<'a, I2C: I2c, D: DelayUs> Lcd<'a, I2C, D> {
 
     Returns a `Result` that will report I2C errors, if any.
      */
-    pub fn create_char(&mut self, location: u8, charmap: u8) {
+    pub fn create_char(&mut self, location: u8, charmap: [u8; 8]) {
         let location = location & 0x7;
         self.command(Mode::SETCGRAMADDR as u8 | (location << 3));
         for i in 0..8 {
