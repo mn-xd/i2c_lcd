@@ -111,7 +111,6 @@ pub enum BitMode {
     Bit4 = 0x00,
     Bit8 = 0x10,
 }
-
 #[derive(Copy, Clone, Debug)]
 pub enum Dots {
     Dots5x8 = 0x00,
@@ -273,7 +272,20 @@ impl<'a, I2C: I2c, D: DelayUs> Lcd<'a, I2C, D> {
         self.command(Mode::SETDDRAMADDR as u8 | (col + self.row_offsets[row as usize]))?;
         Ok(())
     }
+    /**
+    Create custom character at CGRAM location (0 - 7)
 
+    # Errors
+
+    Returns a `Result` that will report I2C errors, if any.
+     */
+    pub fn create_char(&mut self, location: u8, charmap: u8) {
+        let location = location.clamp(0, 7);
+        self.command(Mode::SETCGRAMADDR as u8 | (location << 3));
+        for i in 0..8 {
+            self.write(charmap[i])
+        }
+    }
     /**
     Control whether the display is on or off
 
@@ -337,14 +349,14 @@ impl<'a, I2C: I2c, D: DelayUs> Lcd<'a, I2C, D> {
         Ok(())
     }
 
+    // Send two bytes to the display
+    pub fn write(&mut self, value: u8) -> Result<(), I2C::Error> {
+        self.send(value, BitAction::RegisterSelect)
+    }
+
     // Set one of the display's control options and then send the updated set of options to the display
     fn write_display_control(&mut self) -> Result<(), I2C::Error> {
         self.command(Mode::DISPLAYCONTROL as u8 | self.control.value())
-    }
-
-    // Send two bytes to the display
-    fn write(&mut self, value: u8) -> Result<(), I2C::Error> {
-        self.send(value, BitAction::RegisterSelect)
     }
 
     fn command(&mut self, value: u8) -> Result<(), I2C::Error> {
