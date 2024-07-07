@@ -155,6 +155,12 @@ impl DisplayControl {
     }
 }
 
+impl Default for DisplayControl {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 pub struct Lcd<'a, I2C, D> {
     i2c: &'a mut I2C,
     control: DisplayControl,
@@ -178,7 +184,7 @@ impl<'a, I2C: I2c, D: DelayNs> Lcd<'a, I2C, D> {
             address,
             delay,
             rows,
-            row_offsets: [0x00, 0x40, 0x00 + cols, 0x40 + cols],
+            row_offsets: [0x00, 0x40, cols, 0x40 + cols],
         };
         display.init()?;
         Ok(display)
@@ -283,8 +289,8 @@ impl<'a, I2C: I2c, D: DelayNs> Lcd<'a, I2C, D> {
         let location = location & 0x7;
         let _ = self.command(Mode::SETCGRAMADDR as u8 | (location << 3));
 
-        for i in 0..8 {
-            let _ = self.write(charmap[i]);
+        for item in &charmap {
+            let _ = self.write(*item);
         }
     }
     /**
