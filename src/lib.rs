@@ -281,9 +281,10 @@ impl<'a, I2C: I2c, D: DelayNs> Lcd<'a, I2C, D> {
      */
     pub fn create_char(&mut self, location: u8, charmap: [u8; 8]) {
         let location = location & 0x7;
-        self.command(Mode::SETCGRAMADDR as u8 | (location << 3));
+        let _ = self.command(Mode::SETCGRAMADDR as u8 | (location << 3));
+
         for i in 0..8 {
-            self.write(charmap[i]);
+            let _ = self.write(charmap[i]);
         }
     }
     /**
